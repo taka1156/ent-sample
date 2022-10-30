@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+</head>
+<body>
+		<div class="mermaid" id="er-diagram">
+erDiagram
+    Category {
+        int id
+        string category_name
+        string category_icon
+        string category_memo
+        timeDOTTime created_at
+        timeDOTTime updated_at
+        timeDOTTime deleted_at
+    }
+    Goal {
+        int id
+        string goal
+        timeDOTTime created_at
+        timeDOTTime updated_at
+        timeDOTTime deleted_at
+    }
+    Role {
+        int id
+        string role_name
+        string role_icon
+        string role_memo
+        timeDOTTime created_at
+        timeDOTTime updated_at
+        timeDOTTime deleted_at
+    }
+    Team {
+        int id
+        string team_name
+        string team_icon
+        string team_memo
+        timeDOTTime created_at
+        timeDOTTime updated_at
+        timeDOTTime deleted_at
+    }
+    User {
+        int id
+        int role_id
+        int team_id
+        int goal_id
+        string name
+        string email
+        string user_icon
+        string user_memo
+        timeDOTTime created_at
+        timeDOTTime updated_at
+        timeDOTTime deleted_at
+    }
+    	Goal |o--o| User : "user/goal"
+    	Role |o--o{ User : "user/role"
+    	Team |o--o{ User : "user/team"
+    	User }o--o{ Category : "category/user"
+		</div>
+	<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+	<script src="https://unpkg.com/panzoom@9.4.3/dist/panzoom.min.js"></script>
+	<script>
+		mermaid.mermaidAPI.initialize({
+			startOnLoad: true,
+		});
+		var observer = new MutationObserver((event) => {
+			document.querySelectorAll('text[id^=entity]').forEach(text => {
+				text.textContent = text.textContent.replace('DOT', '.');
+				text.textContent = text.textContent.replace('STAR', '*');
+				text.textContent = text.textContent.replace('LBRACK', '[');
+				text.textContent = text.textContent.replace('RBRACK', ']');
+			});
+			observer.disconnect();
+			panzoom(document.getElementById('er-diagram'));
+		});
+		observer.observe(document.getElementById('er-diagram'), { attributes: true, childList: true });
+	</script>
+</body>
+</html>

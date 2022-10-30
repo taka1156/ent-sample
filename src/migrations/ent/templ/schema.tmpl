@@ -1,0 +1,43 @@
+package schema
+
+import (
+	"strings"
+
+	"entgo.io/ent"
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
+	"entgo.io/ent/schema/field"
+)
+
+// {{ . }} holds the schema definition for the {{ . }} entity.
+type {{ . }} struct {
+	ent.Schema
+}
+// Fields of the {{ . }}.
+func ({{ . }}) Fields() []ent.Field {
+	return []ent.Field{
+		field.Int("id").
+			StorageKey().
+			SchemaType(map[string]string{
+				dialect.MySQL: "int",
+			}),
+		field.Time("created_at"),
+		field.Time("updated_at"),
+		field.Time("deleted_at").
+			Optional(),
+	}
+}
+// Edges of the {{ . }}.
+func ({{ . }}) Edges() []ent.Edge {
+	return nil
+}
+// Annotations of the {{ . }}.
+func ({{ . }}) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{
+			Table: strings.ToLower("{{ . }}"),
+		},
+	}
+}
+

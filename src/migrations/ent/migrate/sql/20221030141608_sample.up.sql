@@ -1,0 +1,12 @@
+-- create "goal" table
+CREATE TABLE `goal` (`goal_id` int NOT NULL AUTO_INCREMENT, `goal` varchar(300) NOT NULL, `created_at` timestamp NOT NULL, `updated_at` timestamp NOT NULL, `deleted_at` timestamp NULL, PRIMARY KEY (`goal_id`)) CHARSET utf8mb4 COLLATE utf8mb4_bin;
+-- create "role" table
+CREATE TABLE `role` (`role_id` int NOT NULL AUTO_INCREMENT, `role_name` varchar(127) NOT NULL, `role_icon` varchar(127) NOT NULL, `role_memo` varchar(300) NOT NULL, `created_at` timestamp NOT NULL, `updated_at` timestamp NOT NULL, `deleted_at` timestamp NULL, PRIMARY KEY (`role_id`)) CHARSET utf8mb4 COLLATE utf8mb4_bin;
+-- create "team" table
+CREATE TABLE `team` (`team_id` int NOT NULL AUTO_INCREMENT, `team_name` varchar(127) NOT NULL, `team_icon` varchar(127) NOT NULL, `team_memo` varchar(300) NOT NULL, `created_at` timestamp NOT NULL, `updated_at` timestamp NOT NULL, `deleted_at` timestamp NULL, PRIMARY KEY (`team_id`)) CHARSET utf8mb4 COLLATE utf8mb4_bin;
+-- create "user" table
+CREATE TABLE `user` (`user_id` int NOT NULL AUTO_INCREMENT, `user_name` varchar(20) NOT NULL, `email` varchar(127) NOT NULL, `user_icon` varchar(127) NOT NULL, `user_memo` varchar(300) NOT NULL, `created_at` timestamp NOT NULL, `updated_at` timestamp NOT NULL, `deleted_at` timestamp NULL, `goal_id` int NOT NULL, `role_id` int NULL, `team_id` int NOT NULL, PRIMARY KEY (`user_id`), UNIQUE INDEX `goal_id` (`goal_id`), CONSTRAINT `user_goal_user` FOREIGN KEY (`goal_id`) REFERENCES `goal` (`goal_id`) ON DELETE NO ACTION, CONSTRAINT `user_role_user` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`) ON DELETE SET NULL, CONSTRAINT `user_team_user` FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`) ON DELETE NO ACTION) CHARSET utf8mb4 COLLATE utf8mb4_bin;
+-- create "category" table
+CREATE TABLE `category` (`category_id` int NOT NULL AUTO_INCREMENT, `category_name` varchar(127) NOT NULL, `category_icon` varchar(127) NOT NULL, `category_memo` varchar(300) NOT NULL, `created_at` timestamp NOT NULL, `updated_at` timestamp NOT NULL, `deleted_at` timestamp NULL, PRIMARY KEY (`category_id`)) CHARSET utf8mb4 COLLATE utf8mb4_bin;
+-- create "j_user_with_category" table
+CREATE TABLE `j_user_with_category` (`user_id` int NOT NULL, `category_id` int NOT NULL, PRIMARY KEY (`user_id`, `category_id`), CONSTRAINT `j_user_with_category_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE, CONSTRAINT `j_user_with_category_category_id` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE CASCADE) CHARSET utf8mb4 COLLATE utf8mb4_bin;
