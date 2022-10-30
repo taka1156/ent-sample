@@ -1,7 +1,7 @@
 ## スキーマ作成~sql生成までの手順
 
-1. こちらでスキーマの雛形作成
-    `go run -mod=mod entgo.io/ent/cmd/ent init`
+1. こちらでスキーマの雛形作成  
+    `go run -mod=mod entgo.io/ent/cmd/ent init スキーマ名(構造体名も兼ねているので、最初は大文字)`
 
 2. 以下のようなものが生成されるので、こちらに追記
     ```go
@@ -105,7 +105,7 @@ import (
 func main() {
     ctx := context.Background()
     // Create a local migration directory able to understand golang-migrate migration file format for replay.
-    dir, err := sqltool.NewGolangMigrateDir("ent/migrate/migrations")
+    dir, err := sqltool.NewGolangMigrateDir("ent/migrate/migrations") //ここを書き換えると出力先を変更可能
     if err != nil {
         log.Fatalf("failed creating atlas migration directory: %v", err)
     }
@@ -126,7 +126,7 @@ func main() {
 }
 ```
 
-5. 以下で、SQLが生成(その時点の全部のテーブルの変更や追加がまとめて反映される)
+5. 以下で、SQLが生成(その時点の全部のテーブルの変更や追加がまとめて反映される)　　
 `go run -mod=mod ent/migrate/main.go 名前`
 
 6. 生成されたSQLを実行
@@ -164,7 +164,7 @@ User:
         +----------+----------+---------+---------+----------+--------+----------+
 ```
 
-`go get -u github.com/a8m/enter`をインストール
+`go get -u github.com/a8m/enter`をインストール　　
 `go  run -mod=mod github.com/a8m/enter schemaディレクトリまでのパス`を実行
 
 このようなER図をHTMLとして吐き出してくれます。
