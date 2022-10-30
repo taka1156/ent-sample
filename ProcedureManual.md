@@ -1,46 +1,9 @@
-```Makefile
-name=sample
-MYSQL_URL="mysql://user:password@tcp(127.0.0.1:3306)/sample"
-
-# スキーマの一覧、構造確認
-ent-list:
-	go run -mod=mod entgo.io/ent/cmd/ent describe ./migrations/ent/schema
-
-# ER図吐き出し(html)
-ent-ergen:
-    go  run -mod=mod github.com/a8m/enter ./migrations/ent/schema
-
-# 新規スキーマ生成
-ent-schema:
-		go run -mod=mod entgo.io/ent/cmd/ent init --target ./migrations/ent/schema --template ./migrations/ent/templ/schema.tmpl ${name}
-
-# sql、その他関連コード生成
-ent-gen:
-	go generate ./migrations/ent
-	go run -mod=mod ./migrations/ent/migrate/main.go ${name}
-
-# 用途不明?
-sqllint:
-	go run -mod=mod ariga.io/atlas/cmd/atlas@master migrate lint \
-	--dev-url="mysql://user:password@localhost:3306/sample" \
-	--dir="file://migrations/ent/migrate/sql" \
-	--dir-format="golang-migrate" \
-	--latest=1
-
-# 生成したsqlを走らせる
-migrate:
-	migrate -path ./migrations/ent/migrate/sql -database ${MYSQL_URL} up
-
-migrate-create:
-	migrate create -ext sql -dir ./migrations/ent/migrate/sql -tz asia/tokyo ${name}
-```
-
 ## スキーマ作成~sql生成までの手順
 
 1. こちらでスキーマの雛形作成
     `go run -mod=mod entgo.io/ent/cmd/ent init`
 
-2. 以下のようなものが生成されるので、こちらを追記
+2. 以下のようなものが生成されるので、こちらに追記
     ```go
     package schema
 
@@ -166,6 +129,7 @@ func main() {
 5. 以下で、SQLが生成(その時点の全部のテーブルの変更や追加がまとめて反映される)
 `go run -mod=mod ent/migrate/main.go 名前`
 
+6. 生成されたSQLを実行
 
 ## その他使えそうなコマンド
 
@@ -206,3 +170,42 @@ User:
 このようなER図をHTMLとして吐き出してくれます。
 
 <img width="584" alt="スクリーンショット 2022-10-30 12 02 35" src="https://user-images.githubusercontent.com/47517002/198860620-c121d127-ed92-4541-bc7b-d767f31b164d.png">
+
+## makefile
+
+```Makefile
+name=sample
+MYSQL_URL="mysql://user:password@tcp(127.0.0.1:3306)/sample"
+
+# スキーマの一覧、構造確認
+ent-list:
+	go run -mod=mod entgo.io/ent/cmd/ent describe ./migrations/ent/schema
+
+# ER図吐き出し(html)
+ent-ergen:
+    go  run -mod=mod github.com/a8m/enter ./migrations/ent/schema
+
+# 新規スキーマ生成
+ent-schema:
+		go run -mod=mod entgo.io/ent/cmd/ent init --target ./migrations/ent/schema --template ./migrations/ent/templ/schema.tmpl ${name}
+
+# sql、その他関連コード生成
+ent-gen:
+	go generate ./migrations/ent
+	go run -mod=mod ./migrations/ent/migrate/main.go ${name}
+
+# 用途不明?
+sqllint:
+	go run -mod=mod ariga.io/atlas/cmd/atlas@master migrate lint \
+	--dev-url="mysql://user:password@localhost:3306/sample" \
+	--dir="file://migrations/ent/migrate/sql" \
+	--dir-format="golang-migrate" \
+	--latest=1
+
+# 生成したsqlを走らせる
+migrate:
+	migrate -path ./migrations/ent/migrate/sql -database ${MYSQL_URL} up
+
+migrate-create:
+	migrate create -ext sql -dir ./migrations/ent/migrate/sql -tz asia/tokyo ${name}
+```
